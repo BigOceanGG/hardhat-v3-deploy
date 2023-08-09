@@ -19,6 +19,7 @@
     "lint": "tslint --config tslint.json --project tsconfig.json",
     "test": "mocha --exit --recursive 'test/**/*.test.ts'",
     "build": "tsc",
+    "node": "npx hardhat node",
     "watch": "tsc -w"
   },
   "files": [
