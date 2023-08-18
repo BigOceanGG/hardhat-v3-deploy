@@ -10,7 +10,8 @@
     "strict": true,
     "rootDirs": ["./src", "./test"],
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "lib": ["ES2020"]
   },
   "exclude": ["dist", "node_modules"],
   "include": ["./test", "./src"]

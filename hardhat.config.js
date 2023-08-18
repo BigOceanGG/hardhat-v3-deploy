@@ -1,5 +1,22 @@
-require("@uniswap/hardhat-v3-deploy");
+require("@bigoceangg/hardhat-v3-deploy");
+var Table = require("cli-table3");
+var UniswapV3Deployer = require("./dist/deployer/UniswapV3Deployer").UniswapV3Deployer;
 /** @type import('hardhat/config').HardhatUserConfig */
+
+task("test", "Prints the list of accounts", async () => {
+  const [actor] = await ethers.getSigners();
+  const contracts = await UniswapV3Deployer.deploy(actor);
+
+  const table = new Table({
+    head: ["Contract", "Address"],
+    style: { border: [] },
+  });
+  for (const item of Object.keys(contracts)) {
+    table.push([item, contracts[item].address]);
+  }
+  console.info(table.toString());
+});
+
 module.exports = {
   defaultNetwork: "localhost",
   networks: {

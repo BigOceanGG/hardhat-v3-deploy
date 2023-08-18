@@ -9,6 +9,10 @@ const artifacts: { [name: string]: ContractJson } = {
   NFTDescriptor: require("@uniswap/v3-periphery/artifacts/contracts/libraries/NFTDescriptor.sol/NFTDescriptor.json"),
   NonfungibleTokenPositionDescriptor: require("@uniswap/v3-periphery/artifacts/contracts/NonfungibleTokenPositionDescriptor.sol/NonfungibleTokenPositionDescriptor.json"),
   NonfungiblePositionManager: require("@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json"),
+  Quoter: require("@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json"),
+  TickLens: require("@uniswap/v3-periphery/artifacts/contracts/lens/TickLens.sol/TickLens.json"),
+  V3Migrator: require("@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json"),
+  UniswapInterfaceMulticall: require("@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json"),
   WETH9,
 };
 
@@ -33,6 +37,18 @@ export class UniswapV3Deployer {
       weth9.address,
       positionDescriptor.address
     );
+    const quoter = await deployer.deployQuoter(
+      factory.address,
+      weth9.address,
+    );
+    const tickLens = await deployer.deployTickLens();
+    const v3Migrator = await deployer.deployV3Migrator(
+      factory.address,
+      weth9.address,
+      positionManager.address
+    );
+    const uniswapInterfaceMulticall = await deployer.deployUniswapInterfaceMulticall();
+
 
     return {
       weth9,
@@ -41,6 +57,10 @@ export class UniswapV3Deployer {
       nftDescriptorLibrary,
       positionDescriptor,
       positionManager,
+      quoter,
+      tickLens,
+      v3Migrator,
+      uniswapInterfaceMulticall,
     };
   }
 
@@ -63,6 +83,22 @@ export class UniswapV3Deployer {
     return await this.deployContract<Contract>(
       artifacts.WETH9.abi,
       artifacts.WETH9.bytecode,
+      [],
+      this.deployer
+    );
+  }
+  async deployTickLens() {
+    return await this.deployContract<Contract>(
+      artifacts.TickLens.abi,
+      artifacts.TickLens.bytecode,
+      [],
+      this.deployer
+    );
+  }
+  async deployUniswapInterfaceMulticall() {
+    return await this.deployContract<Contract>(
+      artifacts.UniswapInterfaceMulticall.abi,
+      artifacts.UniswapInterfaceMulticall.bytecode,
       [],
       this.deployer
     );
@@ -98,7 +134,7 @@ export class UniswapV3Deployer {
             NFTDescriptor: [
               {
                 length: 20,
-                start: 1261,
+                start: 1681,
               },
             ],
           },
@@ -112,7 +148,10 @@ export class UniswapV3Deployer {
     return (await this.deployContract(
       artifacts.NonfungibleTokenPositionDescriptor.abi,
       linkedBytecode,
-      [weth9Address],
+      [
+        weth9Address,
+        "0x4554480000000000000000000000000000000000000000000000000000000000",
+      ],
       this.deployer
     )) as Contract;
   }
@@ -126,6 +165,29 @@ export class UniswapV3Deployer {
       artifacts.NonfungiblePositionManager.abi,
       artifacts.NonfungiblePositionManager.bytecode,
       [factoryAddress, weth9Address, positionDescriptorAddress],
+      this.deployer
+    );
+  }
+
+
+  async deployQuoter(
+    factoryAddress: string,
+    weth9Address: string) {
+    return await this.deployContract<Contract>(
+      artifacts.Quoter.abi,
+      artifacts.Quoter.bytecode,
+      [factoryAddress, weth9Address],
+      this.deployer
+    );
+  }
+  async deployV3Migrator(
+    factoryAddress: string,
+    weth9Address: string,
+    positionManager: string) {
+    return await this.deployContract<Contract>(
+      artifacts.V3Migrator.abi,
+      artifacts.V3Migrator.bytecode,
+      [factoryAddress, weth9Address, positionManager],
       this.deployer
     );
   }

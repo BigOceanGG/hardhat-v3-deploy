@@ -1,6 +1,6 @@
 {
-  "name": "@uniswap/hardhat-v3-deploy",
-  "version": "0.1.1",
+  "name": "@bigoceangg/hardhat-v3-deploy",
+  "version": "0.1.3",
   "description": "Hardhat plugin for Uniswap V3 deployment",
   "repository": "github:Uniswap/hardhat-v3-deploy",
   "author": "Omar Bohsali",
@@ -49,9 +49,10 @@
     "hardhat": "^2.0.0"
   },
   "dependencies": {
+    "@bigoceangg/hardhat-v3-deploy": "^0.1.3",
     "@uniswap/hardhat-v3-deploy": "^0.1.1",
     "@uniswap/v3-core": "1.0.0",
-    "@uniswap/v3-periphery": "^1.0.1",
+    "@uniswap/v3-periphery": "^1.3.0",
     "cli-table3": "^0.6.0"
   }
 }
